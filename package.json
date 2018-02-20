@@ -1,0 +1,16 @@
+{
+  "name": "mass-subs",
+  "version": "1.0.0",
+  "description": "A subtitles Management system",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Anubhav Ujjawal",
+  "license": "ISC",
+  "dependencies": {
+    "ejs": "^2.5.7",
+    "express": "^4.16.2",
+    "mysql": "^2.15.0"
+  }
+}
