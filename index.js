@@ -36,18 +36,15 @@ con.connect(function(err) {
 });
 
 var app = express();
+app.use(express.static("static"));
+app.set("view engine", "ejs");
 
-// index html page
-var template = ejs.renderFile("./templates/index.ejs", (err, str) => {
-  if (err) {
-    console.log(err);
-    res.send("some error occured");
-  }
-  app.get("/", (req, res) => {
-    res.send(str);
-  });
+app.get("/", async (req, res) => {
+  const movies = await functions.queries.getTopSixMovies(con);
+  console.log(movies);
+  res.render("index", { movies });
 });
 
-app.listen(5000, function() {
-  console.log("Server running at port 5000");
+app.listen(4000, function() {
+  console.log("Server running at port 4000");
 });
