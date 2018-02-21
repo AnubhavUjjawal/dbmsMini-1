@@ -1,0 +1,52 @@
+<% include navbar.ejs %>
+    <div class="jumbotron jumbotron-fluid m-2 p-2">
+        <p class="text-center">Download Subtitles for the movie
+            <%= movie.title.toUpperCase() %>
+        </p>
+
+    </div>
+    <div class="card col-sm-2 m-2 p-2 float-left">
+        <img class="card-img-top mt-2" src="images/150x200" alt="Card image cap">
+        <div class="card-body">
+            <p class="card-title" style="font-family: 'Boogaloo', cursive !important;">
+                <%= movie.title %>
+            </p>
+            <p class="card-text">
+                <small class="text-muted">
+                    Release Date:
+                    <%= movie.release_date.toDateString() %>
+                </small>
+            </p>
+        </div>
+    </div>
+    <div class="card col-sm-9 m-2 my-3">
+        <div class="card-body" style="font-size:1.5rem;">
+            <p>Title:&nbsp;
+                <%= movie.title %>
+                    <br>
+            </p>
+            <% if (movie.homepage.length > 0) { %>
+                <p> Homepage:&nbsp;
+                    <a href="<%= movie.homepage %>">
+                        <%= movie.homepage %>
+                    </a>
+                    <br>
+                </p>
+                <% } %>
+                    <% if (movie.budget != 0) {%>
+                        <p>Budget:&nbsp;
+                            <%= movie.budget %>
+                                <br>
+                        </p>
+                        <% } %>
+                            <p>Average movie votes:&nbsp;
+                                <%= movie.vote_avg %>
+                                    <br>
+                            </p>
+                            <p>Release Date:&nbsp;
+                                <%= movie.release_date.toDateString() %>
+                            </p>
+
+        </div>
+    </div>
+    <% include footer.ejs %>

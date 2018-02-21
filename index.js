@@ -45,6 +45,12 @@ app.get("/", async (req, res) => {
   res.render("index", { movies });
 });
 
+app.get("/subs", async (req, res) => {
+  const movie = await functions.queries.getTopSixMovies(con);
+  console.log(movie[0]);
+  res.render("subs", { movie: movie[0] });
+});
+
 app.listen(4000, function() {
   console.log("Server running at port 4000");
 });
