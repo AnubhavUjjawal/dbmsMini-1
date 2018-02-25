@@ -5,34 +5,45 @@
             flex-wrap: wrap;
             justify-content: initial;
         }
+
         .list {
-            width: 212px;
+            width: 210px;
             list-style-type: none;
         }
+
         .search {
             margin-bottom: 0;
         }
     </style>
-    
+
     <div class="jumbotron jumbotron-fluid">
-        <h3 class="display-4 text-center">Search Results:</h3>
+        <h3 class="display-4 text-center">Search Results for Genre:
+            <%=genre%>
+        </h3>
         <ul class="flexbox text-center">
             <% for(var i=0; i < movies.length; i++) { %>
-                <li class="list mx-2">
+                <li class="list mx-3">
                     <img class="card-img-top" src="images/150x200" alt="movieimage cap">
                     <div class="card-body">
                         <h4 class="card-title">
                             <%= movies[i].title %>
                         </h4>
-                        <p class="card-text">
-                            <small class="text-muted">
-                                <%= movies[i].release_date.toDateString() %>
-                            </small>
-                        </p>
+                        <% try {%>
+                            <p class="card-text">
+                                <small class="text-muted">
+                                    Release:
+                                    <%= movies[i].release_date.toDateString() %>
+                                </small>
+                            </p>
+                            <%} catch (err) {%>
+                                Unknown release date
+                                </small>
+                                </p>
+                                <%}%>
                     </div>
                 </li>
                 <% } %>
         </ul>
     </div>
 
-<% include footer.ejs %>
+    <% include footer.ejs %>

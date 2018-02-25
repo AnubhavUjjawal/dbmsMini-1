@@ -3,6 +3,7 @@ const ejs = require("ejs");
 const mysql = require("mysql");
 const passport = require("passport");
 const cookieSession = require("cookie-session");
+const formidable = require("express-formidable");
 
 const functions = require("./functions");
 const authRoutes = require("./routes/authRoutes");
@@ -98,28 +99,48 @@ app.use(passport.session());
 // app.use(app.router);
 app.set("view engine", "ejs");
 authRoutes(app);
+app.use(formidable());
 
-const getGenreList = (req, res, next) => {
+const getGenreListAndSetUser = (req, res, next) => {
   con.query("SELECT * FROM Genre;", (err, result) => {
     if (err) throw err;
     // console.log(result);
     // resolve(result);
     res.locals.genres = result;
+    res.locals.user = req.user;
     next();
   });
 };
-app.use(getGenreList);
+app.use(getGenreListAndSetUser);
 
 app.get("/", async (req, res) => {
   const movies = await functions.queries.getTopSixMovies(con);
   console.log(movies);
-  res.render("index", { movies, user: req.user });
+  res.render("index", { movies });
 });
 
 app.get("/subs", async (req, res) => {
   const movie = await functions.queries.getTopSixMovies(con);
   console.log(movie[0]);
   res.render("subs", { movie: movie[0] });
+});
+
+app.get("/search-movie", (req, res) => {
+  res.redirect("/");
+});
+
+app.post("/search-movie", async (req, res) => {
+  const genre = req.fields.genre;
+  if (genre == undefined) {
+    const movies = await functions.queries.getTop30Movies(con);
+    res.render("query", { movies, genre: "All" });
+  } else {
+    const gname = await functions.queries.getGenreName(con, genre);
+    // console.log(gname, gname[0].gname);
+    const results = await functions.queries.searchMoviesByGenre(con, genre);
+    res.render("query", { movies: results, genre: gname[0].gname });
+    // res.send(results);
+  }
 });
 
 app.listen(4000, function() {

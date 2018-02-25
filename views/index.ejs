@@ -13,11 +13,18 @@
                         <h4 class="card-title">
                             <%= movies[i].title %>
                         </h4>
-                        <p class="card-text">
-                            <small class="text-muted">
-                                <%= movies[i].release_date.toDateString() %>
-                            </small>
-                        </p>
+                        <% try {%>
+                            <p class="card-text">
+                                <small class="text-muted">
+                                    Release:
+                                    <%= movies[i].release_date.toDateString() %>
+                                </small>
+                            </p>
+                            <%} catch (err) {%>
+                                Unknown release date
+                                </small>
+                                </p>
+                                <%}%>
                     </div>
                 </div>
                 <% } %>

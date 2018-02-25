@@ -26,12 +26,12 @@
             <div class="collapse navbar-collapse mx-2" id="navbarToggler">
                 <a class="navbar-brand" href="#" style="font-family: 'Righteous';">Mass Subtitles</a>
 
-                <form class="form-inline my-3 my-lg-0 mr-auto">
-                    <input class="form-control mr-sm-4" type="search" placeholder="Enter a Movie Name or leave it empty to search by genre">
+                <form class="form-inline my-3 my-lg-0 mr-auto" action="/search-movie" method="post">
+                    <input name="keyword" class="form-control mr-sm-4" type="search" placeholder="Enter a Movie Name or leave it empty to search by genre">
                     <select class="form-control mr-sm-2" name="genre">
                         <option value="all" selected disabled hidden>Search by genre.</option>
                         <% for(var i=0; i<genres.length; i++){%>
-                            <option value="<%=genres[i].gname%>">
+                            <option value="<%=genres[i].gid%>">
                                 <%=genres[i].gname%>
                             </option>
                             <%}%>
