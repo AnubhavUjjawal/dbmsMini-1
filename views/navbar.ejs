@@ -38,7 +38,15 @@
                     </select>
                     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
                 </form>
-                <button class="btn btn-primary my-2 my-sm-0 mx-2 float-right">Log in With Google</button>
+                <% if(user!=null) {%>
+                    <button class="btn btn-primary my-2 my-sm-0 mx-2 float-right">
+                        <%=user.name%>
+                    </button>
+                    <%} else {%>
+                        <a href="/auth/google" class="btn btn-primary my-2 my-sm-0 mx-2 float-right" style="color:white;">
+                            Sign in With Google
+                        </a>
+                        <%}%>
 
             </div>
         </nav>
