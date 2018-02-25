@@ -1,0 +1,38 @@
+<% include navbar.ejs %>
+    <style>
+        .flexbox {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: initial;
+        }
+        .list {
+            width: 212px;
+            list-style-type: none;
+        }
+        .search {
+            margin-bottom: 0;
+        }
+    </style>
+    
+    <div class="jumbotron jumbotron-fluid">
+        <h3 class="display-4 text-center">Search Results:</h3>
+        <ul class="flexbox text-center">
+            <% for(var i=0; i < movies.length; i++) { %>
+                <li class="list mx-2">
+                    <img class="card-img-top" src="images/150x200" alt="movieimage cap">
+                    <div class="card-body">
+                        <h4 class="card-title">
+                            <%= movies[i].title %>
+                        </h4>
+                        <p class="card-text">
+                            <small class="text-muted">
+                                <%= movies[i].release_date.toDateString() %>
+                            </small>
+                        </p>
+                    </div>
+                </li>
+                <% } %>
+        </ul>
+    </div>
+
+<% include footer.ejs %>
