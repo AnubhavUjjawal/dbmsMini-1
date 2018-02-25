@@ -99,6 +99,17 @@ app.use(passport.session());
 app.set("view engine", "ejs");
 authRoutes(app);
 
+const getGenreList = (req, res, next) => {
+  con.query("SELECT * FROM Genre;", (err, result) => {
+    if (err) throw err;
+    // console.log(result);
+    // resolve(result);
+    res.locals.genres = result;
+    next();
+  });
+};
+app.use(getGenreList);
+
 app.get("/", async (req, res) => {
   const movies = await functions.queries.getTopSixMovies(con);
   console.log(movies);

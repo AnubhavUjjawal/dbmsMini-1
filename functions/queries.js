@@ -10,6 +10,18 @@ const getTopSixMovies = (con, callback) => {
     );
   });
 };
+
+const getGenreList = (con, callback) => {
+  return new Promise(resolve => {
+    con.query("SELECT * FROM Genre;", (err, result) => {
+      if (err) throw err;
+      // console.log(result);
+      resolve(result);
+    });
+  });
+};
+
 module.exports = {
-  getTopSixMovies
+  getTopSixMovies,
+  getGenreList
 };

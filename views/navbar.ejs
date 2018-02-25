@@ -27,14 +27,18 @@
                 <a class="navbar-brand" href="#" style="font-family: 'Righteous';">Mass Subtitles</a>
 
                 <form class="form-inline my-3 my-lg-0 mr-auto">
-                    <input class="form-control mr-sm-2" type="search" placeholder="Enter a Movie Name or..">
+                    <input class="form-control mr-sm-4" type="search" placeholder="Enter a Movie Name or leave it empty to search by genre">
                     <select class="form-control mr-sm-2" name="genre">
                         <option value="all" selected disabled hidden>Search by genre.</option>
+                        <% for(var i=0; i<genres.length; i++){%>
+                            <option value="<%=genres[i].gname%>">
+                                <%=genres[i].gname%>
+                            </option>
+                            <%}%>
+                                <!-- <option value="1">Lorem Ipsum</option>
                         <option value="1">Lorem Ipsum</option>
                         <option value="1">Lorem Ipsum</option>
-                        <option value="1">Lorem Ipsum</option>
-                        <option value="1">Lorem Ipsum</option>
-                        <option value="1">Lorem Ipsum</option>
+                        <option value="1">Lorem Ipsum</option> -->
                     </select>
                     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
                 </form>
