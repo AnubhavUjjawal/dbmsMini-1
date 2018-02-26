@@ -37,6 +37,18 @@ const searchMoviesByGenre = (con, gid, callback) => {
   });
 };
 
+const getMovieDetails = (con, mid, callback) => {
+  return new Promise(resolve => {
+    con.query(
+      `SELECT * FROM Movie AS m WHERE m.mid=${mid}`, (err, result) => {
+        if(err) throw err;
+        console.log(result);
+        resolve(result);
+      }
+    );
+  });
+};
+
 const getGenreList = (con, callback) => {
   return new Promise(resolve => {
     con.query("SELECT * FROM Genre;", (err, result) => {
@@ -57,10 +69,25 @@ const getGenreName = (con, genre, callback) => {
   });
 };
 
+const subtitle = (con, callback) => {
+  return new Promise(resolve => {
+    con.query(
+      "SELECT * FROM Subtitle WHERE sid=1;",
+      (err, result) => {
+        if (err) throw err;
+        // console.log(result);
+        resolve(result);
+      }
+    );
+  });
+};
+
 module.exports = {
   getTopSixMovies,
   getGenreList,
   searchMoviesByGenre,
   getGenreName,
-  getTop30Movies
+  getTop30Movies,
+  subtitle,
+  getMovieDetails
 };

@@ -120,8 +120,15 @@ app.get("/", async (req, res) => {
   res.render("index", { movies });
 });
 
-app.get("/subs", async (req, res) => {
-  const movie = await functions.queries.getTopSixMovies(con);
+// app.get("/subs", async (req, res) => {
+//   const movie = await functions.queries.getTopSixMovies(con);
+//   console.log(movie[0]);
+//   res.render("subs", { movie: movie[0] });
+// });
+
+app.get("/subs/:id(\\d+)/", async (req, res) => {
+  const mid = req.params.id;
+  const movie = await functions.queries.getMovieDetails(con, mid);
   console.log(movie[0]);
   res.render("subs", { movie: movie[0] });
 });
@@ -131,6 +138,12 @@ app.get("/search-movie", (req, res) => {
 });
 
 // searching movie in database.
+app.get("/subtitle", async (req, res) => {
+  const movies = await functions.queries.subtitle(con);
+  console.log(movies);
+  res.render("test", { movies });
+});
+
 app.post("/search-movie", async (req, res) => {
   const genre = req.fields.genre;
   if (genre == undefined) {
