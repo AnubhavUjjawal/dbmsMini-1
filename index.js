@@ -166,8 +166,11 @@ app.get("/add-new-movie", (req, res) => {
 app.post("/add-new-movie", (req, res) => {
   const values = req.fields;
   var csv = new CSV(req.fields.keywords);
+  console.log(csv);
   values.keywords = csv.parse()[0];
   res.send(values);
+  // const id = await functions.queries.getNextMovieId(con);
+  // const movie = await functions.queries.getMovieDetails(con, values);
 });
 
 app.listen(4000, function() {
