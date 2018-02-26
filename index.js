@@ -4,6 +4,7 @@ const mysql = require("mysql");
 const passport = require("passport");
 const cookieSession = require("cookie-session");
 const formidable = require("express-formidable");
+const CSV = require("comma-separated-values");
 
 const functions = require("./functions");
 const authRoutes = require("./routes/authRoutes");
@@ -129,6 +130,7 @@ app.get("/search-movie", (req, res) => {
   res.redirect("/");
 });
 
+// searching movie in database.
 app.post("/search-movie", async (req, res) => {
   const genre = req.fields.genre;
   if (genre == undefined) {
@@ -141,6 +143,18 @@ app.post("/search-movie", async (req, res) => {
     res.render("query", { movies: results, genre: gname[0].gname });
     // res.send(results);
   }
+});
+
+//requesting for movie
+app.get("/add-new-movie", (req, res) => {
+  res.render("addMovie");
+});
+
+app.post("/add-new-movie", (req, res) => {
+  const values = req.fields;
+  var csv = new CSV(req.fields.keywords);
+  values.keywords = csv.parse()[0];
+  res.send(values);
 });
 
 app.listen(4000, function() {

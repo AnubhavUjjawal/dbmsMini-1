@@ -1,0 +1,63 @@
+<% include navbar.ejs %>
+    <div class="col-md-6 my-2 p-2 offset-md-3 jumbotron jumbotron-fluid">
+        <h2 class="text-center">Add a Movie</h2>
+        <form method="POST" id="movie-form">
+            <div class="form-group">
+                <label for="title">Movie Title</label>
+                <input type="text" class="form-control" name="title" maxlength="100" aria-describedby="title" placeholder="Enter name of the movie"
+                    required>
+            </div>
+            <div class="form-group">
+                <label for="release_date">Release Date</label>
+                <input type="date" class="form-control" name="release_date" required>
+            </div>
+            <div class="form-group">
+                <label for="exampleSelect2">Choose genres</label>
+                <select multiple class="form-control" name="genres">
+                    <% for(var i=0; i<genres.length; i++){%>
+                        <option value="<%=genres[i].gid%>">
+                            <%=genres[i].gname%>
+                        </option>
+                        <%}%>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="keywords">Keywords</label>
+                <input type="text" class="form-control" name="keywords" data-role="tagsinput" placeholder="put comma seperated values">
+            </div>
+            <div class="form-group">
+                <label for="vote_avg">Total Votes Count IMDB:</label>
+                <input type="number" class="form-control" name="vote_avg" placeholder="Enter vote avg" required>
+            </div>
+            <div class="form-group">
+                <label for="budget">Estimated Movie Budget</label>
+                <input type="number" class="form-control" name="budget" placeholder="Enter movie budget" required>
+            </div>
+            <div class="form-group">
+                <label for="homepage">Homepage: </label>
+                <input type="text" class="form-control" name="homepage" maxlength="1000" placeholder="Homepage link of movie" required>
+            </div>
+
+            <input type="button" name="btn" value="Submit" id="submitBtn" data-toggle="modal" data-target="#confirm-submit" class="btn btn-default"
+            />
+        </form>
+        <div class="modal fade" id="confirm-submit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        Confirm Submit
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to add the following movie?
+
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <button id="submit-movie-form-btn" class="btn btn-success success">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <% include footer.ejs %>

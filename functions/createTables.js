@@ -13,9 +13,9 @@ const checkAndCreate = (con, callback) => {
               (err, result) => {
                 if (err) console.log("Keyword error");
                 const q_string =
-                  "CREATE TABLE IF NOT EXISTS Movie (mid INT NOT NULL PRIMARY KEY, title VARCHAR(100), release_date DATE, vote_avg FLOAT, budget INT, homepage VARCHAR(1000));";
+                  "CREATE TABLE IF NOT EXISTS Movie (mid INT NOT NULL AUTO_INCREMENT PRIMARY KEY, title VARCHAR(100), release_date DATE, vote_avg FLOAT, budget INT, homepage VARCHAR(1000));";
                 con.query(q_string, (err, result) => {
-                  if (err) console.log("Movie error");
+                  if (err) console.log("Movie error", err.message);
                   con.query(
                     "CREATE TABLE IF NOT EXISTS Genre_list (mid INT NOT NULL, gid INT NOT NULL, FOREIGN KEY (mid) REFERENCES Movie(mid), FOREIGN KEY (gid) REFERENCES Genre(gid), PRIMARY KEY (gid, mid));",
                     (err, result) => {
