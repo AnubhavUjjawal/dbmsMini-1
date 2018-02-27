@@ -40,7 +40,7 @@ const checkAndCreate = (con, callback) => {
                                         console.log("Comment error");
                                       }
                                       con.query(
-                                        "CREATE TABLE IF NOT EXISTS USERS (uid VARCHAR(200) NOT NULL PRIMARY KEY, name VARCHAR(200));",
+                                        "CREATE TABLE IF NOT EXISTS USERS (uid VARCHAR(200) NOT NULL PRIMARY KEY, name VARCHAR(200), expr INT DEFAULT 0);",
                                         (err, result) => {
                                           if (err) {
                                             throw err;
