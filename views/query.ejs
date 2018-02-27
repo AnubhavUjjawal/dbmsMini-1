@@ -20,29 +20,33 @@
         <h3 class="display-4 text-center">Search Results for Genre:
             <%=genre%>
         </h3>
-        <ul class="flexbox text-center">
+        <ul class="flexbox">
             <% for(var i=0; i < movies.length; i++) { %>
-                <li class="list mx-3">
-                    <a href="/subs/<%= movies[i].mid %>"><img class="card-img-top" src="images/150x200" alt="movieimage cap">
+                <div class="card m-2 col-sm-2">
+                    <a href="/subs/<%= movies[i].mid %>">
+                        <img class="card-img-top pt-2" src="images/150x200" alt="movieimage cap">
                     </a>
                     <div class="card-body">
-                        <a href="/subs/<%= movies[i].mid %>"><h4 class="card-title">
-                            <%= movies[i].title %>
-                        </h4></a>
+                        <a href="/subs/<%= movies[i].mid %>">
+                            <h4 class="card-title">
+                                <%= movies[i].title %>
+                            </h4>
+                        </a>
                         <% try {%>
                             <p class="card-text">
                                 <small class="text-muted">
                                     Release:
-                                    <%= movies[i].release_date.toDateString() %>
+                                    <%= new moment(movies[i].release_date).format('MMMM Do YYYY') %>
                                 </small>
                             </p>
                             <%} catch (err) {%>
                                 Unknown release date
-                                </small>
-                                </p>
-                                <%}%>
+                                <%= err.message%>
+                                    </small>
+                                    </p>
+                                    <%}%>
                     </div>
-                </li>
+                </div>
                 <% } %>
         </ul>
     </div>

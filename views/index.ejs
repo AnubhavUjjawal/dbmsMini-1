@@ -8,24 +8,28 @@
         <div class="card-deck m-4 text-center">
             <% for(var i=0; i < movies.length; i++) { %>
                 <div class="card">
-                    <a href="/subs/<%= movies[i].mid %>"><img class="card-img-top" src="images/150x200" alt="movieimage cap">
+                    <a href="/subs/<%= movies[i].mid %>">
+                        <img class="card-img-top" src="images/150x200" alt="movieimage cap">
                     </a>
                     <div class="card-body">
-                       <a href="/subs/<%= movies[i].mid %>"> <h4 class="card-title">
-                            <%= movies[i].title %>
-                        </h4></a>
+                        <a href="/subs/<%= movies[i].mid %>">
+                            <h4 class="card-title">
+                                <%= movies[i].title %>
+                            </h4>
+                        </a>
                         <% try {%>
                             <p class="card-text">
                                 <small class="text-muted">
                                     Release:
-                                    <%= movies[i].release_date.toDateString() %>
+                                    <%= new moment(movies[i].release_date).format('MMMM Do YYYY') %>
                                 </small>
                             </p>
                             <%} catch (err) {%>
                                 Unknown release date
-                                </small>
-                                </p>
-                                <%}%>
+                                <%=err.message%>
+                                    </small>
+                                    </p>
+                                    <%}%>
                     </div>
                 </div>
                 <% } %>
