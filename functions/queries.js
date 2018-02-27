@@ -59,6 +59,27 @@ const getGenreList = (con, callback) => {
   });
 };
 
+const getNextMovieId = (con, callback) => {
+  return new Promise(resolve => {
+    con.query("SELECT * FROM Movie ORDER BY mid DESC LIMIT 1;",(err, result) => {
+      if(err) throw err;
+      // console.log(result[0].mid);
+      resolve(result);
+    });
+  });
+};
+
+const insertMovie = (con, values, mid) => {
+  return new Promise(resolve => {
+    console.log(values.title);
+    con.query(`INSERT INTO Movie (mid, title, release_date, vote_avg, budget, homepage) VALUES(${mid}, "${values.title}", "${values.release_date}", "${values.vote_avg}", "${values.budget}", "${values.homepage}");`,(err, result) => {
+      if(err) throw err;
+      // console.log(result[0].mid);
+      resolve(result);
+    });
+  });
+}
+
 const getGenreName = (con, genre, callback) => {
   return new Promise(resolve => {
     con.query(`SELECT * FROM Genre WHERE gid=${genre}`, (err, result) => {
@@ -89,5 +110,7 @@ module.exports = {
   getGenreName,
   getTop30Movies,
   subtitle,
-  getMovieDetails
+  getMovieDetails,
+  getNextMovieId,
+  insertMovie
 };

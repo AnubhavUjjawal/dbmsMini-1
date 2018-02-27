@@ -159,18 +159,21 @@ app.post("/search-movie", async (req, res) => {
 });
 
 //requesting for movie
-app.get("/add-new-movie", (req, res) => {
+app.get("/add-new-movie", async (req, res) => {
   res.render("addMovie");
 });
 
-app.post("/add-new-movie", (req, res) => {
+app.post("/add-new-movie", async (req, res) => {
   const values = req.fields;
   var csv = new CSV(req.fields.keywords);
-  console.log(csv);
+  // console.log(csv);
+  // console.log(csv.title);
   values.keywords = csv.parse()[0];
-  res.send(values);
-  // const id = await functions.queries.getNextMovieId(con);
-  // const movie = await functions.queries.getMovieDetails(con, values);
+  // res.send(values);
+  const lastmovie = await functions.queries.getNextMovieId(con);
+  console.log((lastmovie[0].mid+1));
+  const movie = await functions.queries.insertMovie(con, values, (lastmovie[0].mid+1));
+  res.redirect(`/subs/${(lastmovie[0].mid+1)}`);
 });
 
 app.listen(4000, function() {

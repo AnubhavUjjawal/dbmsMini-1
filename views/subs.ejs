@@ -25,7 +25,7 @@
                 <%= movie.title %>
                     <br>
             </p>
-            <% if (movie.homepage.length > 0) { %>
+            <% if (movie.homepage != null && movie.homepage.length > 0) { %>
                 <p> Homepage:&nbsp;
                     <a href='<%= movie.homepage %>'>
                         <%= movie.homepage %>
