@@ -231,7 +231,7 @@ app.get("/add-subs", (req, res) => {
 app.post("/add-subs", async (req, res) => {
   const values = req.fields;
   const files = req.files;
-  if (files.sfile.type != "application/x-subrip") {
+  if (files.sfile.type != "application/x-subrip" && files.sfile.type != "application/octet-stream") {
     fs.unlinkSync(__dirname + `/${files.sfile.path}`);
     res.send(
       "Bad file upload. Please note we only support .srt files",
