@@ -39,6 +39,9 @@ con.connect(function(err) {
     con.changeUser({ database: "SUBS_DB" }, err => {
       functions.createTables.checkAndCreate(con, () => {
         console.log("TABLES INITIALIZED");
+        functions.triggers.deleteTrigger(con, () => {
+          console.log("TRIGGERS CREATED");
+        });
       });
     });
   });
@@ -192,7 +195,7 @@ app.get("/add-new-movie", async (req, res) => {
 app.post("/add-new-movie", async (req, res) => {
   const values = req.fields;
   var csv = new CSV(req.fields.keywords);
-  // console.log(csv);
+  console.log(csv);
   // console.log(csv.title);
   values.keywords = csv.parse()[0];
   // res.send(values);

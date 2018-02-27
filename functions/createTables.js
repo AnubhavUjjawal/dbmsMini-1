@@ -29,11 +29,11 @@ const checkAndCreate = (con, callback) => {
                             (err, result) => {
                               if (err) console.log("Keyword list error");
                               con.query(
-                                "CREATE TABLE IF NOT EXISTS Subtitle (sid INT NOT NULL PRIMARY KEY, mid INT NOT NULL, rating INT NOT NULL, language VARCHAR(20), FOREIGN KEY (mid) REFERENCES Movie(mid), sfile BLOB);",
+                                "CREATE TABLE IF NOT EXISTS Subtitle (sid INT AUTO_INCREMENT PRIMARY KEY, mid INT NOT NULL, uid VARCHAR(200) NOT NULL, rating INT NOT NULL, language VARCHAR(20), FOREIGN KEY (mid) REFERENCES Movie(mid), FOREIGN KEY (uid) REFERENCES USERS(uid), sfile VARCHAR(1000));",
                                 (err, result) => {
                                   if (err) console.log("Subtitle error");
                                   con.query(
-                                    "CREATE TABLE IF NOT EXISTS Comment (cid INT NOT NULL PRIMARY KEY, sid INT NOT NULL, commentor VARCHAR(30), upvotes INT, ctext TEXT, FOREIGN KEY (sid) REFERENCES Subtitle(sid));",
+                                    "CREATE TABLE IF NOT EXISTS Comment (cid INT AUTO_INCREMENT PRIMARY KEY, sid INT NOT NULL, commentor VARCHAR(30), upvotes INT, ctext TEXT, FOREIGN KEY (sid) REFERENCES Subtitle(sid));",
                                     (err, result) => {
                                       if (err) {
                                         throw err;
