@@ -39,13 +39,11 @@ const searchMoviesByGenre = (con, gid, callback) => {
 
 const getMovieDetails = (con, mid, callback) => {
   return new Promise(resolve => {
-    con.query(
-      `SELECT * FROM Movie AS m WHERE m.mid=${mid}`, (err, result) => {
-        if(err) throw err;
-        console.log(result);
-        resolve(result);
-      }
-    );
+    con.query(`SELECT * FROM Movie AS m WHERE m.mid=${mid}`, (err, result) => {
+      if (err) throw err;
+      console.log(result);
+      resolve(result);
+    });
   });
 };
 
@@ -69,16 +67,42 @@ const getGenreName = (con, genre, callback) => {
   });
 };
 
-const subtitle = (con, callback) => {
+const searchMoviesByName = (con, name, callback) => {
   return new Promise(resolve => {
     con.query(
-      "SELECT * FROM Subtitle WHERE sid=1;",
+      `SELECT * FROM Movie WHERE  lower(replace(Movie.title,' ','')) LIKE lower(replace('%${name}%',' ',''))`,
       (err, result) => {
         if (err) throw err;
-        // console.log(result);
+        // console.log(result, "result");
         resolve(result);
       }
     );
+  });
+};
+
+const searchMoviesByKeyword = (con, keyword, callback) => {
+  return new Promise(resolve => {
+    // keyword-> keyword-list-> movie
+    const query = `SELECT * FROM Movie AS m WHERE m.mid IN (SELECT k.mid FROM Keyword_list AS k WHERE k.kid IN (SELECT kid FROM Keyword WHERE  lower(replace(Keyword.kname,' ','')) LIKE lower(replace('%${keyword}%',' ','')) ))`;
+    con.query(
+      // `SELECT * FROM Keyword WHERE (lower(replace(Keyword.kname,' ','')) IN  LIKE lower(replace('%${name}%',' ','')))`,
+      query,
+      (err, result) => {
+        if (err) throw err;
+        // console.log(result, "result");
+        resolve(result);
+      }
+    );
+  });
+};
+
+const subtitle = (con, callback) => {
+  return new Promise(resolve => {
+    con.query("SELECT * FROM Subtitle WHERE sid=1;", (err, result) => {
+      if (err) throw err;
+      // console.log(result);
+      resolve(result);
+    });
   });
 };
 
@@ -89,5 +113,7 @@ module.exports = {
   getGenreName,
   getTop30Movies,
   subtitle,
-  getMovieDetails
+  getMovieDetails,
+  searchMoviesByName,
+  searchMoviesByKeyword
 };

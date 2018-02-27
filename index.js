@@ -10,6 +10,18 @@ const functions = require("./functions");
 const authRoutes = require("./routes/authRoutes");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 
+// // getting unique values in 2 arrays
+// Array.prototype.unique = function() {
+//   var a = this.concat();
+//   for (var i = 0; i < a.length; ++i) {
+//     for (var j = i + 1; j < a.length; ++j) {
+//       if (JSON.stringify(a[i]) === JSON.stringify(a[j])) a.splice(j--, 1);
+//     }
+//   }
+
+//   return a;
+// };
+
 var con = mysql.createConnection({
   host: "159.89.166.158",
   user: "root",
@@ -109,9 +121,11 @@ const getGenreListAndSetUser = (req, res, next) => {
     // resolve(result);
     res.locals.genres = result;
     res.locals.user = req.user;
+    res.locals.moment = require("moment");
     next();
   });
 };
+app.use(require("express-promise")());
 app.use(getGenreListAndSetUser);
 
 app.get("/", async (req, res) => {
@@ -146,7 +160,19 @@ app.get("/subtitle", async (req, res) => {
 
 app.post("/search-movie", async (req, res) => {
   const genre = req.fields.genre;
-  if (genre == undefined) {
+  const keyword = req.fields.keyword;
+  console.log(keyword);
+  if (keyword != "") {
+    let movies = await functions.queries.searchMoviesByName(con, keyword);
+    let movies_keyword = await functions.queries.searchMoviesByKeyword(
+      con,
+      keyword
+    );
+    // console.log(movies_keyword, "movie set");
+    movies = movies.concat(movies_keyword);
+
+    res.render("query", { movies, genre: "All" });
+  } else if (genre == undefined) {
     const movies = await functions.queries.getTop30Movies(con);
     res.render("query", { movies, genre: "All" });
   } else {
