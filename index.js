@@ -42,7 +42,10 @@ con.connect(function(err) {
       functions.createTables.checkAndCreate(con, () => {
         console.log("TABLES INITIALIZED");
         functions.triggers.deleteTrigger(con, () => {
-          console.log("TRIGGERS CREATED");
+          console.log("DELETE TRIGGERS CREATED");
+        });
+        functions.triggers.updateExperience(con, () => {
+          console.log("EXP TRIGGERS CREATED");
         });
       });
     });
