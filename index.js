@@ -104,7 +104,6 @@ passport.use(
 var app = express();
 
 app.use("/static/", express.static("static"));
-app.use("/subtitle-download", express.static("public"));
 
 app.use(require("cookie-parser")());
 // app.use(require("body-parser").urlencoded({ extended: true }));
@@ -122,7 +121,7 @@ authRoutes(app);
 
 app.use(
   formidable({
-    uploadDir: "public/",
+    uploadDir: "static/subs/",
     keepExtensions: true
   })
 );
