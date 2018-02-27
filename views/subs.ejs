@@ -6,7 +6,7 @@
 
     </div>
     <div class="card col-sm-2 m-2 p-2 float-left">
-        <img class="card-img-top mt-2" src="/images/150x200" alt="Card image cap" />
+        <img class="card-img-top mt-2" src="/static/images/150x200" alt="Card image cap" />
         <div class="card-body">
             <p class="card-title" style="font-family: 'Boogaloo', cursive !important;">
                 <%= movie.title %>
@@ -64,6 +64,38 @@
                                     </p>
 
         </div>
+    </div>
+    <div class="card col-sm-9 m-2 my-3">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Language</th>
+                    <th>Rating</th>
+                    <th>Uploaded by</th>
+                    <th>Download</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <% for(var i=0; i<subs.length; i++){%>
+                    <tr>
+                        <td>
+                            <%=subs[i].language%>
+                        </td>
+                        <td>
+                            <%=subs[i].rating%>
+                        </td>
+
+                        <td>
+                            <%=subs[i].name%>
+                        </td>
+                        <td>
+                            <a class="btn btn-primary" target="_blank" href="/subtitledownload/<%=subs[i].sfile%>">Download</a>
+                        </td>
+                    </tr>
+                    <%}%>
+            </tbody>
+        </table>
     </div>
     <%if(user){%>
         <div class="modal fade" id="subtitleUpload" tabindex="-1" role="dialog">

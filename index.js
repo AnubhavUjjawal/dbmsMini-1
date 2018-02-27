@@ -103,7 +103,9 @@ passport.use(
 
 var app = express();
 
-app.use(express.static("static"));
+app.use("/static/", express.static("static"));
+app.use("/subtitle-download", express.static("public"));
+
 app.use(require("cookie-parser")());
 // app.use(require("body-parser").urlencoded({ extended: true }));
 app.use(
@@ -154,8 +156,10 @@ app.get("/", async (req, res) => {
 app.get("/subs/:id(\\d+)/", async (req, res) => {
   const mid = req.params.id;
   const movie = await functions.queries.getMovieDetails(con, mid);
+  const subs = await functions.queries.searchSubtitleByMid(con, mid);
+  // const users = await functions.queries.getSubtitleUsers(con, subs);
   console.log(movie[0]);
-  res.render("subs", { movie: movie[0] });
+  res.render("subs", { movie: movie[0], subs });
 });
 
 app.get("/search-movie", (req, res) => {
@@ -230,6 +234,14 @@ app.post("/add-subs", async (req, res) => {
       "Bad file upload. Please note we only support .srt files",
       (status = 500)
     );
+  } else {
+    const subs = await functions.queries.insertSubtitle(
+      con,
+      values,
+      files,
+      req.user.uid
+    );
+    res.redirect(`/subs/${values.mid}`);
   }
 
   const data = { ...values, ...files, uid: req.user.uid };

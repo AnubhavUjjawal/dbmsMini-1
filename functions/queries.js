@@ -39,13 +39,11 @@ const searchMoviesByGenre = (con, gid, callback) => {
 
 const getMovieDetails = (con, mid, callback) => {
   return new Promise(resolve => {
-    con.query(
-      `SELECT * FROM Movie AS m WHERE m.mid=${mid}`, (err, result) => {
-        if(err) throw err;
-        console.log(result);
-        resolve(result);
-      }
-    );
+    con.query(`SELECT * FROM Movie AS m WHERE m.mid=${mid}`, (err, result) => {
+      if (err) throw err;
+      console.log(result);
+      resolve(result);
+    });
   });
 };
 
@@ -61,24 +59,48 @@ const getGenreList = (con, callback) => {
 
 const getNextMovieId = (con, callback) => {
   return new Promise(resolve => {
-    con.query("SELECT * FROM Movie ORDER BY mid DESC LIMIT 1;",(err, result) => {
-      if(err) throw err;
-      // console.log(result[0].mid);
-      resolve(result);
-    });
+    con.query(
+      "SELECT * FROM Movie ORDER BY mid DESC LIMIT 1;",
+      (err, result) => {
+        if (err) throw err;
+        // console.log(result[0].mid);
+        resolve(result);
+      }
+    );
   });
 };
 
 const insertMovie = (con, values, mid) => {
   return new Promise(resolve => {
     console.log(values.title);
-    con.query(`INSERT INTO Movie (mid, title, release_date, vote_avg, budget, homepage) VALUES(${mid}, "${values.title}", "${values.release_date}", "${values.vote_avg}", "${values.budget}", "${values.homepage}");`,(err, result) => {
-      if(err) throw err;
-      // console.log(result[0].mid);
-      resolve(result);
-    });
+    con.query(
+      `INSERT INTO Movie (mid, title, release_date, vote_avg, budget, homepage) VALUES(${mid}, "${
+        values.title
+      }", "${values.release_date}", "${values.vote_avg}", "${
+        values.budget
+      }", "${values.homepage}");`,
+      (err, result) => {
+        if (err) throw err;
+        // console.log(result[0].mid);
+        resolve(result);
+      }
+    );
   });
-}
+};
+
+const insertSubtitle = (con, values, files, uid) => {
+  return new Promise(resolve => {
+    con.query(
+      `INSERT INTO Subtitle (mid, uid, rating, language, sfile) VALUES("${
+        values.mid
+      }", "${uid}", 0, "${values.language}", "${files.sfile.path}")`,
+      (err, result) => {
+        if (err) throw err;
+        resolve(result);
+      }
+    );
+  });
+};
 
 const getGenreName = (con, genre, callback) => {
   return new Promise(resolve => {
@@ -94,6 +116,19 @@ const searchMoviesByName = (con, name, callback) => {
   return new Promise(resolve => {
     con.query(
       `SELECT * FROM Movie WHERE  lower(replace(Movie.title,' ','')) LIKE lower(replace('%${name}%',' ',''))`,
+      (err, result) => {
+        if (err) throw err;
+        // console.log(result, "result");
+        resolve(result);
+      }
+    );
+  });
+};
+
+const searchSubtitleByMid = (con, mid, callback) => {
+  return new Promise(resolve => {
+    con.query(
+      `SELECT * FROM Subtitle INNER JOIN USERS ON USERS.uid=Subtitle.uid WHERE Subtitle.mid=${mid} `,
       (err, result) => {
         if (err) throw err;
         // console.log(result, "result");
@@ -119,6 +154,21 @@ const searchMoviesByKeyword = (con, keyword, callback) => {
   });
 };
 
+// const getSubtitleUsers = (con, subs) => {
+//   let arr = Array();
+//   for (var i = 0; i < subs.length; i++) {
+//     arr.push(subs.mid);
+//   }
+
+//   return new Promise(resolve => {
+//     const query = `SELECT * FROM USERS WHERE uid in (${arr.toString()})`;
+//     con.query(query, (err, result) => {
+//       if (err) throw err;
+//       resolve(result);
+//     });
+//   });
+// };
+
 const subtitle = (con, callback) => {
   return new Promise(resolve => {
     con.query("SELECT * FROM Subtitle WHERE sid=1;", (err, result) => {
@@ -140,5 +190,8 @@ module.exports = {
   searchMoviesByName,
   searchMoviesByKeyword,
   getNextMovieId,
-  insertMovie
+  insertMovie,
+  insertSubtitle,
+  searchSubtitleByMid
+  // getSubtitleUsers
 };
