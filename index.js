@@ -4,6 +4,8 @@ const mysql = require("mysql");
 const passport = require("passport");
 const cookieSession = require("cookie-session");
 const formidable = require("express-formidable");
+const fs = require("fs");
+const path = require("path");
 const CSV = require("comma-separated-values");
 
 const functions = require("./functions");
@@ -115,7 +117,13 @@ app.use(passport.session());
 // app.use(app.router);
 app.set("view engine", "ejs");
 authRoutes(app);
-app.use(formidable());
+
+app.use(
+  formidable({
+    uploadDir: "public/",
+    keepExtensions: true
+  })
+);
 
 const getGenreListAndSetUser = (req, res, next) => {
   con.query("SELECT * FROM Genre;", (err, result) => {
@@ -200,9 +208,32 @@ app.post("/add-new-movie", async (req, res) => {
   values.keywords = csv.parse()[0];
   // res.send(values);
   const lastmovie = await functions.queries.getNextMovieId(con);
-  console.log((lastmovie[0].mid+1));
-  const movie = await functions.queries.insertMovie(con, values, (lastmovie[0].mid+1));
-  res.redirect(`/subs/${(lastmovie[0].mid+1)}`);
+  console.log(lastmovie[0].mid + 1);
+  const movie = await functions.queries.insertMovie(
+    con,
+    values,
+    lastmovie[0].mid + 1
+  );
+  res.redirect(`/subs/${lastmovie[0].mid + 1}`);
+});
+
+app.get("/add-subs", (req, res) => {
+  res.redirect("/");
+});
+
+app.post("/add-subs", async (req, res) => {
+  const values = req.fields;
+  const files = req.files;
+  if (files.sfile.type != "application/x-subrip") {
+    fs.unlinkSync(__dirname + `/${files.sfile.path}`);
+    res.send(
+      "Bad file upload. Please note we only support .srt files",
+      (status = 500)
+    );
+  }
+
+  const data = { ...values, ...files, uid: req.user.uid };
+  console.log(data);
 });
 
 app.listen(4000, function() {

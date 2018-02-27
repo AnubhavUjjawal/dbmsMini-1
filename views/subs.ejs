@@ -6,7 +6,7 @@
 
     </div>
     <div class="card col-sm-2 m-2 p-2 float-left">
-        <img class="card-img-top mt-2" src="../images/150x200" alt="Card image cap" />
+        <img class="card-img-top mt-2" src="/images/150x200" alt="Card image cap" />
         <div class="card-body">
             <p class="card-title" style="font-family: 'Boogaloo', cursive !important;">
                 <%= movie.title %>
@@ -27,38 +27,84 @@
     </div>
     <div class="card col-sm-9 m-2 my-3">
         <div class="card-body" style="font-size:1.5rem;">
-            <p>Title:&nbsp;
-                <%= movie.title %>
-                    <br>
-            </p>
-            <% if (movie.homepage != null && movie.homepage.length > 0) { %>
-                <p> Homepage:&nbsp;
-                    <a href='<%= movie.homepage %>'>
-                        <%= movie.homepage %>
-                    </a>
-                    <br>
-                </p>
-                <% } %>
-                    <% if (movie.budget != 0) {%>
-                        <p>Budget:&nbsp;
-                            <%= movie.budget %>
-                                <br>
+            <% if(user){ %>
+                <div class="btn float-right btn-primary" data-toggle="modal" data-target="#subtitleUpload">Upload Subtitles</div>
+                <%}%>
+                    <p>Title:&nbsp;
+                        <%= movie.title %>
+                            <br>
+                    </p>
+
+                    <% if (movie.homepage != null && movie.homepage.length > 0) { %>
+                        <p> Homepage:&nbsp;
+                            <a href='<%= movie.homepage %>'>
+                                <%= movie.homepage %>
+                            </a>
+                            <br>
                         </p>
                         <% } %>
-                            <p>Average movie votes:&nbsp;
-                                <%= movie.vote_avg %>
-                                    <br>
-                            </p>
-                            <p>Release Date:&nbsp;
-                                <% try {%>
-                                    <%= new moment(movie.release_date).format('MMMM Do YYYY') %>
+                            <% if (movie.budget != 0) {%>
+                                <p>Budget:&nbsp;
+                                    <%= movie.budget %>
+                                        <br>
+                                </p>
+                                <% } %>
+                                    <p>Average movie votes:&nbsp;
+                                        <%= movie.vote_avg %>
+                                            <br>
+                                    </p>
+                                    <p>Release Date:&nbsp;
+                                        <% try {%>
+                                            <%= new moment(movie.release_date).format('MMMM Do YYYY') %>
 
-                                        <%} catch (err) {%>
-                                            Unknown release date
+                                                <%} catch (err) {%>
+                                                    Unknown release date
 
-                                            <%}%>
-                            </p>
+                                                    <%}%>
+                                    </p>
 
         </div>
     </div>
-    <% include footer.ejs %>
+    <%if(user){%>
+        <div class="modal fade" id="subtitleUpload" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Upload Subtitle for
+                            <b>
+                                <%= movie.title%>
+                            </b>
+                        </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form action="/add-subs" method="post" enctype="multipart/form-data">
+
+                        <div class="modal-body">
+                            <input type="number" name="mid" value=<%=movie.mid%> hidden/>
+                            <div class="form-group">
+                                <input type="file" name="sfile" accept=".srt" required>
+                            </div>
+
+                            <div class="form-group">
+                                <select name="language" class="form-control">
+                                    <option value="EN">English</option>
+                                    <option value="ES">Spanish</option>
+                                    <option value="HI">Hindi</option>
+                                    <option value="DE">German</option>
+                                    <option value="FR">French</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Upload</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+        <%}%>
+            <% include footer.ejs %>

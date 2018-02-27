@@ -29,7 +29,11 @@ const checkAndCreate = (con, callback) => {
                             (err, result) => {
                               if (err) console.log("Keyword list error");
                               con.query(
+<<<<<<< Updated upstream
+                                "CREATE TABLE IF NOT EXISTS Subtitle (sid INT NOT NULL AUTO_INCREMENT PRIMARY KEY, mid INT NOT NULL, rating INT NOT NULL, language VARCHAR(20), FOREIGN KEY (mid) REFERENCES Movie(mid), sfile BLOB);",
+=======
                                 "CREATE TABLE IF NOT EXISTS Subtitle (sid INT NOT NULL AUTO_INCREMENT PRIMARY KEY, mid INT NOT NULL, uid VARCHAR(200) NOT NULL, rating INT NOT NULL, language VARCHAR(20), FOREIGN KEY (mid) REFERENCES Movie(mid), FOREIGN KEY (uid) REFERENCES USERS(uid), sfile VARCHAR(1000));",
+>>>>>>> Stashed changes
                                 (err, result) => {
                                   if (err) console.log("Subtitle error");
                                   con.query(
