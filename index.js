@@ -7,6 +7,7 @@ const formidable = require("express-formidable");
 const fs = require("fs");
 const path = require("path");
 const CSV = require("comma-separated-values");
+const async = require("async");
 
 const functions = require("./functions");
 const authRoutes = require("./routes/authRoutes");
@@ -179,6 +180,18 @@ app.post("/search-movie", async (req, res) => {
   const genre = req.fields.genre;
   const keyword = req.fields.keyword;
   console.log(keyword);
+  // if(genre!="all" && keyword!=""){
+  //   let movies = await functions.queries.searchMoviesByNameAndGenre(con, keyword, genre);
+  //   let movies_keyword = await functions.queries.searchMoviesByKeywordAndGenre(
+  //     con,
+  //     keyword,
+  //     genre
+  //   );
+  //   movies = movies.concat(movies_keyword);
+
+  //   res.render("query", { movies, genre: "All" });
+  // }
+  // else 
   if (keyword != "") {
     let movies = await functions.queries.searchMoviesByName(con, keyword);
     let movies_keyword = await functions.queries.searchMoviesByKeyword(
@@ -210,9 +223,9 @@ app.post("/add-new-movie", async (req, res) => {
   const values = req.fields;
   var csv = new CSV(req.fields.keywords);
   console.log(csv);
-  // console.log(csv.title);
+  console.log(csv.parse());
   values.keywords = csv.parse()[0];
-  // res.send(values);
+  
   const lastmovie = await functions.queries.getNextMovieId(con);
   console.log(lastmovie[0].mid + 1);
   const movie = await functions.queries.insertMovie(
@@ -220,8 +233,21 @@ app.post("/add-new-movie", async (req, res) => {
     values,
     lastmovie[0].mid + 1
   );
+  const keyword = await functions.queries.insertKeyword(con, lastmovie[0].mid + 1, csv.parse()[0]);
+  console.log("keyword = ", keyword);
+  // res.redirect("/keyword_list", con, csv.parse()[0], lastmovie[0].mid + 1);
+  // const keyword_movie = await functions.queries.relateKeywordMovie(con, csv.parse()[0], lastmovie[0].mid + 1);
+  
+  var csv1 = new CSV(req.fields.genres);
+  // console.log(csv1);
+  // console.log(csv1.data);
+  values.genres = csv1.data;
+  const genre_movie = await functions.queries.relateGenreMovie(con, csv1.data, lastmovie[0].mid + 1);
   res.redirect(`/subs/${lastmovie[0].mid + 1}`);
 });
+
+// app.get("/keyword_list")
+
 
 app.get("/add-subs", (req, res) => {
   res.redirect("/");

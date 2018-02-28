@@ -13,6 +13,16 @@
         crossorigin="anonymous">
     <link rel="stylesheet" href="css/bootstrap-tagsinput.css">
     <title>Mass Subs</title>
+    <style>
+        @media (min-width: 960px) {
+            .custom-input {
+                width: 60% !important;
+            }
+            .custom-form {
+                width: 47%;
+            }
+        }
+    </style>
 </head>
 
 <body style="font-family: 'Boogaloo', cursive !important;">
@@ -24,12 +34,12 @@
             </button>
 
             <div class="collapse navbar-collapse mx-2" id="navbarToggler">
-                <a class="navbar-brand" href="#" style="font-family: 'Righteous';">Mass Subtitles</a>
+                <a class="navbar-brand" href="/" style="font-family: 'Righteous';">Mass Subtitles</a>
 
-                <form class="form-inline my-3 my-lg-0 mr-auto" action="/search-movie" method="post">
-                    <input name="keyword" class="form-control mr-sm-4" type="search" placeholder="Enter a Movie Name or leave it empty to search by genre">
+                <form class="form-inline my-3 my-lg-0 mr-auto custom-form" action="/search-movie" method="post">
+                    <input name="keyword" class="form-control mr-sm-4 custom-input" type="search" placeholder="Enter a Movie Name or leave it empty to search by genre">
                     <select class="form-control mr-sm-2" name="genre">
-                        <option value="all" selected disabled hidden>Search by genre.</option>
+                        <option value="all" selected hidden>Search by genre.</option>
                         <% for(var i=0; i<genres.length; i++){%>
                             <option value="<%=genres[i].gid%>">
                                 <%=genres[i].gname%>
@@ -43,10 +53,13 @@
                     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
                 </form>
                 <% if(user!=null) {%>
+                    <div style="color:#fff" class="my-2 my-sm-0 mx-2 float-right">
+                        Your Experience Points: <%=user.expr%>
+                    </div>
                     <button class="btn btn-primary my-2 my-sm-0 mx-2 float-right">
                         <%=user.name%>
                     </button>
-                    <a href="/logout" class="btn btn-danger float-right">Logout</a>
+                    <a href="/logout" class="btn btn-danger float-right my-2 my-sm-0 mx-2">Logout</a>
                     <%} else {%>
                         <a href="/auth/google" class="btn btn-primary my-2 my-sm-0 mx-2 float-right" style="color:white;">
                             Sign in With Google

@@ -83,14 +83,19 @@
                             <%=subs[i].language%>
                         </td>
                         <td>
-                            <%=subs[i].rating%>
+                           0
                         </td>
 
                         <td>
                             <%=subs[i].name%>
                         </td>
                         <td>
-                            <a class="btn btn-primary" target="_blank" href="/<%=subs[i].sfile%>">Download</a>
+                            <% if (subs[i].sfile.indexOf('/') == -1) {%>
+                                <a class="btn btn-primary" target="_blank" href="/static/subs/<%=subs[i].sfile.substring(10)%>">Download</a>
+                            <% } else { %>
+                                <a class="btn btn-primary" target="_blank" href="/<%=subs[i].sfile%>">Download</a>
+                            <% } %>
+                            
                         </td>
                     </tr>
                     <%}%>

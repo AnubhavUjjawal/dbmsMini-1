@@ -29,7 +29,7 @@ const checkAndCreate = (con, callback) => {
                             (err, result) => {
                               if (err) console.log("Keyword list error");
                               con.query(
-                                "CREATE TABLE IF NOT EXISTS Subtitle (sid INT NOT NULL AUTO_INCREMENT PRIMARY KEY, mid INT NOT NULL, uid VARCHAR(200) NOT NULL, rating INT NOT NULL, language VARCHAR(20), FOREIGN KEY (mid) REFERENCES Movie(mid), FOREIGN KEY (uid) REFERENCES USERS(uid), sfile VARCHAR(1000));",
+                                "CREATE TABLE IF NOT EXISTS Subtitle (sid INT NOT NULL AUTO_INCREMENT PRIMARY KEY, mid INT NOT NULL, uid VARCHAR(200) NOT NULL, language VARCHAR(20), FOREIGN KEY (mid) REFERENCES Movie(mid), FOREIGN KEY (uid) REFERENCES USERS(uid), sfile VARCHAR(1000));",
                                 (err, result) => {
                                   if (err) console.log("Subtitle error");
                                   con.query(
@@ -46,8 +46,19 @@ const checkAndCreate = (con, callback) => {
                                             throw err;
                                             console.log("users table err");
                                           } else {
-                                            resolve(callback());
-                                          }
+                                            con.query(
+                                              "CREATE TABLE IF NOT EXISTS Rating (uid VARCHAR(200), rate INT NOT NULL, sid INT NOT NULL, PRIMARY KEY (uid, sid));",
+                                              (err, result) => {
+                                                if (err){
+                                                  throw err;
+                                                  console.log("rating table err");
+                                                }
+                                                else{
+                                                  resolve(callback());
+                                                }
+                                              }
+                                            );
+                                           }
                                         }
                                       );
                                     }

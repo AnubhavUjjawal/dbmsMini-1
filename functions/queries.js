@@ -1,3 +1,4 @@
+const async = require("async");
 const getTopSixMovies = (con, callback) => {
   return new Promise(resolve => {
     con.query(
@@ -57,6 +58,73 @@ const getGenreList = (con, callback) => {
   });
 };
 
+const insertKeyword = (con, mid, values) => {
+  return new Promise(resolve => {
+    async.eachSeries(values, function(value, callback) {
+      con.query(`SELECT * FROM Keyword WHERE kname="${value}";`, (err, result) => {
+        if (err) throw err;
+        if(result.length == 0){
+          con.query("SELECT * FROM Keyword ORDER BY kid DESC LIMIT 1;", (err, result) => {
+            if (err) throw err;
+            const kid_insrt = result[0].kid+1;
+            con.query(`INSERT INTO Keyword (kid, kname) VALUES(${result[0].kid+1}, "${value}");`, (err, result) => {
+              if(err) throw err;
+              console.log("inserted");
+              con.query(`INSERT INTO Keyword_list (mid, kid) VALUES(${mid},${kid_insrt});`, (err, result) => {
+                if (err) throw err;
+                console.log("keyword with movie");
+                callback();
+              });
+              // callback();
+            });            
+          }); 
+        }
+        else{
+         console.log(result, "printing rsult"); 
+         con.query(`INSERT INTO Keyword_list (mid, kid) VALUES(${mid},${result[0].kid});`, (err, result) => {
+                if (err) throw err;
+                console.log("keyword with movie");
+                callback();
+              });
+      }
+      });
+    });
+    resolve();
+  });
+};
+
+const relateKeywordMovie = (con, values, mid) => {
+  return new Promise(resolve => {
+    async.eachSeries(values, function(value, callback1){
+      con.query(`SELECT * FROM Keyword WHERE kname="${value}";`, (err, result) => {
+        if (err) throw err;
+        console.log("check");
+        console.log(result);
+        
+          con.query(`INSERT INTO Keyword_list (mid, kid) VALUES(${mid},${result[0].kid});`, (err, result) => {
+          if (err) throw err;
+          console.log("keyword with movie");
+          callback1();
+        });
+      });
+      
+    });
+    resolve();
+  });
+};
+
+const relateGenreMovie = (con, gid_array, mid) => {
+  return new Promise(resolve => {
+    gid_array.forEach(function(id) {
+      con.query(`INSERT INTO Genre_list (mid, gid) VALUES(${mid}, ${id});`, (err, result) => {
+        if (err) throw err;
+        console.log("genre_movie");
+      });
+    });
+    resolve();
+  });
+};
+
 const getNextMovieId = (con, callback) => {
   return new Promise(resolve => {
     con.query(
@@ -91,9 +159,9 @@ const insertMovie = (con, values, mid) => {
 const insertSubtitle = (con, values, files, uid) => {
   return new Promise(resolve => {
     con.query(
-      `INSERT INTO Subtitle (mid, uid, rating, language, sfile) VALUES("${
+      `INSERT INTO Subtitle (mid, uid, language, sfile) VALUES("${
         values.mid
-      }", "${uid}", 0, "${values.language}", "${files.sfile.path}")`,
+      }", "${uid}", "${values.language}", "${files.sfile.path}")`,
       (err, result) => {
         if (err) throw err;
         resolve(result);
@@ -141,10 +209,39 @@ const searchSubtitleByMid = (con, mid, callback) => {
 const searchMoviesByKeyword = (con, keyword, callback) => {
   return new Promise(resolve => {
     // keyword-> keyword-list-> movie
-    const query = `SELECT * FROM Movie AS m WHERE m.mid IN (SELECT k.mid FROM Keyword_list AS k WHERE k.kid IN (SELECT kid FROM Keyword WHERE  lower(replace(Keyword.kname,' ','')) LIKE lower(replace('%${keyword}%',' ','')) ))`;
+    const query = `SELECT DISTINCT * FROM Movie AS m WHERE m.mid IN (SELECT k.mid FROM Keyword_list AS k WHERE k.kid IN (SELECT kid FROM Keyword WHERE  lower(replace(Keyword.kname,' ','')) LIKE lower(replace('%${keyword}%',' ','')) ))`;
     con.query(
       // `SELECT * FROM Keyword WHERE (lower(replace(Keyword.kname,' ','')) IN  LIKE lower(replace('%${name}%',' ','')))`,
       query,
+      (err, result) => {
+        if (err) throw err;
+        // console.log(result, "result");
+        resolve(result);
+      }
+    );
+  });
+};
+
+const searchMoviesByKeywordAndGenre = (con, keyword, genre, callback) => {
+  return new Promise(resolve => {
+    // keyword-> keyword-list-> movie
+    const query = `SELECT DISTINCT * FROM (SELECT * FROM Movie AS m WHERE m.mid IN (SELECT k.mid FROM Keyword_list AS k WHERE k.kid IN (SELECT kid FROM Keyword WHERE  lower(replace(Keyword.kname,' ','')) LIKE lower(replace('%${keyword}%',' ','')) ))) as t1 INNER JOIN (SELECT DISTINCT gl.mid, gl.gid, Genre.gname FROM Genre_list as gl INNER JOIN Genre ON gl.gid=Genre.gid) as t2 ON t1.mid=t2.mid`;
+    con.query(
+      // `SELECT * FROM Keyword WHERE (lower(replace(Keyword.kname,' ','')) IN  LIKE lower(replace('%${name}%',' ','')))`,
+      query,
+      (err, result) => {
+        if (err) throw err;
+        // console.log(result, "result");
+        resolve(result);
+      }
+    );
+  });
+};
+
+const searchMoviesByNameAndGenre = (con, name, genre, callback) => {
+  return new Promise(resolve => {
+    con.query(
+      `SELECT * FROM Movie WHERE  lower(replace(Movie.title,' ','')) LIKE lower(replace('%${name}%',' ',''))`,
       (err, result) => {
         if (err) throw err;
         // console.log(result, "result");
@@ -192,6 +289,11 @@ module.exports = {
   getNextMovieId,
   insertMovie,
   insertSubtitle,
-  searchSubtitleByMid
+  searchSubtitleByMid,
+  insertKeyword,
+  relateKeywordMovie,
+  relateGenreMovie,
+  searchMoviesByKeywordAndGenre,
+  searchMoviesByNameAndGenre
   // getSubtitleUsers
 };
