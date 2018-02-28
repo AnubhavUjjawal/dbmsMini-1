@@ -8,6 +8,7 @@ const deleteTrigger = (con, callback) => {
                         DELETE FROM Genre_list WHERE  mid = OLD.mid ;
                         DELETE FROM Production_list WHERE  mid = OLD.mid;
                         DELETE FROM Keyword_list WHERE  mid = OLD.mid;
+                        DELETE FROM Subtitle WHERE  mid = OLD.mid;
                         END`;
     con.query(
       query,

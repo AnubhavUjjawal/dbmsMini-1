@@ -219,6 +219,12 @@ app.get("/add-new-movie", async (req, res) => {
   res.render("addMovie");
 });
 
+app.get("/movie-delete/:id(\\d+)/", async (req, res) => {
+  const mid = req.params.id;
+  const movie = await functions.queries.deleteMovie(con, mid);
+  res.redirect('/');
+});
+
 app.post("/add-new-movie", async (req, res) => {
   const values = req.fields;
   var csv = new CSV(req.fields.keywords);

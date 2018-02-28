@@ -4,6 +4,11 @@
         <h1 class="display-4 text-center">The most visited place for Movie Subtitles!!</h1>
     </div>
     <div class="jumbotron jumbotron-fluid mx-4">
+        <% if (user) { %>
+        <a href="/add-new-movie" class="btn btn-primary my-2 my-sm-0 mx-4 float-right">
+                        Add Movie
+        </a>
+        <% } %>
         <h2 class="text-center">Newest Movies</h2>
         <div class="card-deck m-4 text-center">
             <% for(var i=0; i < movies.length; i++) { %>

@@ -156,6 +156,17 @@ const insertMovie = (con, values, mid) => {
   });
 };
 
+const deleteMovie = (con, mid) => {
+  return new Promise(resolve => {
+    con.query(
+      `DELETE FROM Movie WHERE mid=${mid};`,(err, result) => {
+        if (err) throw err;
+        resolve(result);
+      }
+    );
+  });
+};
+
 const insertSubtitle = (con, values, files, uid) => {
   return new Promise(resolve => {
     con.query(
@@ -294,6 +305,7 @@ module.exports = {
   relateKeywordMovie,
   relateGenreMovie,
   searchMoviesByKeywordAndGenre,
-  searchMoviesByNameAndGenre
+  searchMoviesByNameAndGenre,
+  deleteMovie
   // getSubtitleUsers
 };
