@@ -31,6 +31,7 @@ var con = mysql.createConnection({
   password: "qazwsxedc"
 });
 
+
 con.connect(function(err) {
   if (err) throw err;
   console.log("Connected to MySql DB!");
