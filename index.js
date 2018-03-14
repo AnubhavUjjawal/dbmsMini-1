@@ -13,7 +13,7 @@ const functions = require("./functions");
 const authRoutes = require("./routes/authRoutes");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 
-// // getting unique values in 2 arrays
+// getting unique values in 2 arrays
 // Array.prototype.unique = function() {
 //   var a = this.concat();
 //   for (var i = 0; i < a.length; ++i) {
@@ -26,9 +26,9 @@ const GoogleStrategy = require("passport-google-oauth20").Strategy;
 // };
 
 var con = mysql.createConnection({
-  host: "159.89.166.158",
-  user: "root",
-  password: "qazwsxedc"
+  host: "localhost",       //store the given database in your pc and add the user name and password
+  user: "",
+  password: ""
 });
 
 
